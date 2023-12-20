@@ -1,8 +1,17 @@
-﻿namespace PKOC.Net;
+﻿using System;
 
-public class DeviceIdentification(Guid connectionId, byte address)
+namespace PKOC.Net
 {
-    public Guid ConnectionId { get; init; } = connectionId;
+    public class DeviceIdentification
+    {
+        public DeviceIdentification(Guid connectionId, byte address)
+        {
+            ConnectionId = connectionId;
+            Address = address;
+        }
 
-    public byte Address { get; init; } = address;
+        public Guid ConnectionId { get; }
+
+        public byte Address { get; }
+    }
 }

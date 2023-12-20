@@ -1,6 +1,9 @@
-﻿namespace PKOC.Net;
+﻿using System;
 
-public class CardPresentedEventArgs : EventArgs
+namespace PKOC.Net
 {
+    public class CardPresentedEventArgs : EventArgs
+    {
     
+    }
 }
