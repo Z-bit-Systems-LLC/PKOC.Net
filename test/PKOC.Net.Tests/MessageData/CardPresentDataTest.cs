@@ -9,14 +9,14 @@ public class CardPresentDataTest
     public void ParseDataTest()
     {
         // Arrange
-        var messageData = Convert.FromHexString("E0 FC04 5C020100".Replace(" ", string.Empty));
+        var messageData = Convert.FromHexString("E0 FC06 FB02 5C020100".Replace(" ", string.Empty));
 
         // Act
         var actual = CardPresentData.ParseData(messageData);
 
         // Assert
         Assert.That(actual.ProtocolVersions, Is.EqualTo(new byte[]{0x01, 0x00}));
-        Assert.That(actual.ErrorCode, Is.EqualTo(0x00));
+        Assert.That(actual.ErrorCode, Is.EqualTo(0x02));
     }
 
     [Test]

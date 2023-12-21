@@ -64,22 +64,29 @@ namespace PKOC.Net.MessageData
             byte[] data;
             int length;
 
-            if (payload.Length > 2)
+            switch (code)
             {
-                var dataLength = payload[1];
-                if (payload.Length < dataLength + 2)
+                case TLVCode.TransactionSequence:
+                    data = new[] { payload[1] };
+                    length = 2;
+                    break;
+                case TLVCode.Error:
+                    data = new[] { payload[1] };
+                    length = 2;
+                    break;
+                default:
                 {
-                    throw new Exception("TLV data length is not correct");
-                }
-            
-                data = payload.Slice(2, dataLength).ToArray();
+                    var dataLength = payload[1];
+                    if (payload.Length < dataLength + 2)
+                    {
+                        throw new Exception("TLV data length is not correct");
+                    }
 
-                length = dataLength + 2;
-            }
-            else
-            {
-                data = new[] { payload[1] };
-                length = 2;
+                    data = payload.Slice(2, dataLength).ToArray();
+
+                    length = dataLength + 2;
+                    break;
+                }
             }
 
             return new TLVData(code, length, data);
