@@ -33,7 +33,7 @@ namespace PKOC.Net
                 {
                     if (!IsPSIAVendorCode(eventArgs.ManufacturerSpecific.VendorCode)) return;
                 
-                    if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.CardPresent)
+                    if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.CardPresentResponse)
                     {
                         InvokeCardPresented();
                     }
