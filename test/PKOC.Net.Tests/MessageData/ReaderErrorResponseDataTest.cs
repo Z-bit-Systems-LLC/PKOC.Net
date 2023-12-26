@@ -10,24 +10,20 @@ public class ReaderErrorResponseDataTest
     public void ParseDataTest()
     {
         // Arrange
-        var messageData =
-            Convert.FromHexString(
-                "FE 02".Replace(" ", string.Empty));
+        var messageData = Convert.FromHexString("FE 02".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = ReaderErrorResponseData.ParseData(messageData);
 
         // Assert
-        Assert.That(actual.Error, Is.EqualTo(new [] { ErrorCode.TimeoutAccessingCard }));
+        Assert.That(actual.Error, Is.EqualTo(new[] { ErrorCode.TimeoutAccessingCard }));
     }
-    
+
     [Test]
     public void ParseDataISOStatus()
     {
         // Arrange
-        var messageData =
-            Convert.FromHexString(
-                "FE 019000".Replace(" ", string.Empty));
+        var messageData = Convert.FromHexString("FE 019000".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = ReaderErrorResponseData.ParseData(messageData);
@@ -45,18 +41,20 @@ public class ReaderErrorResponseDataTest
         // Act
         var actual = readerErrorResponseData.BuildData();
 
-        Assert.That(actual.ToArray(), Is.EqualTo(Convert.FromHexString("FE 02".Replace(" ", string.Empty))));
+        Assert.That(actual.ToArray(),
+            Is.EqualTo(Convert.FromHexString("FE 02".RemoveWhiteSpaceFromHexadecimalString())));
     }
-    
+
     [Test]
     public void BuildDataISOStatus()
     {
         // Arrange
-        var readerErrorResponseData = new ReaderErrorResponseData(new byte[] { ErrorCode.ISO7816Status,  0x90, 0x00 });
+        var readerErrorResponseData = new ReaderErrorResponseData(new byte[] { ErrorCode.ISO7816Status, 0x90, 0x00 });
 
         // Act
         var actual = readerErrorResponseData.BuildData();
 
-        Assert.That(actual.ToArray(), Is.EqualTo(Convert.FromHexString("FE 019000".Replace(" ", string.Empty))));
+        Assert.That(actual.ToArray(),
+            Is.EqualTo(Convert.FromHexString("FE 019000".RemoveWhiteSpaceFromHexadecimalString())));
     }
 }

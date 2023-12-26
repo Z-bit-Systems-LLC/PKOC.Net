@@ -12,7 +12,7 @@ public class CardPresentResponseDataTest
         // Arrange
         var messageData =
             Convert.FromHexString(
-                "E0 FC18 FB02 5C020100 4C10000102030405060708090A0B0C0D0E0F".Replace(" ", string.Empty));
+                "E0 FC18 FB02 5C020100 4C10000102030405060708090A0B0C0D0E0F".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = CardPresentResponseData.ParseData(messageData);
@@ -23,14 +23,15 @@ public class CardPresentResponseDataTest
         Assert.That(actual.TransactionIdentifier,
             Is.EqualTo(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray()));
     }
-    
+
     [Test]
     public void ParseDataISOStatus()
     {
         // Arrange
         var messageData =
             Convert.FromHexString(
-                "E0 FC1A FB019000 5C020100 4C10000102030405060708090A0B0C0D0E0F".Replace(" ", string.Empty));
+                "E0 FC1A FB019000 5C020100 4C10000102030405060708090A0B0C0D0E0F"
+                    .RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = CardPresentResponseData.ParseData(messageData);
@@ -46,7 +47,7 @@ public class CardPresentResponseDataTest
     public void ParseDataWrongMessageIdentifier()
     {
         // Arrange
-        var messageData = Convert.FromHexString("E0 FF04 5C020100".Replace(" ", string.Empty));
+        var messageData = Convert.FromHexString("E0 FF04 5C020100".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act/Assert
         Assert.Catch(() => { CardPresentResponseData.ParseData(messageData); });
@@ -56,7 +57,7 @@ public class CardPresentResponseDataTest
     public void ParseDataMissingTLVLength()
     {
         // Arrange
-        var messageData = Convert.FromHexString("E0 FC".Replace(" ", string.Empty));
+        var messageData = Convert.FromHexString("E0 FC".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act/Assert
         Assert.Catch(() => { CardPresentResponseData.ParseData(messageData); });
@@ -74,6 +75,6 @@ public class CardPresentResponseDataTest
         var actual = cardPresentData.BuildData();
 
         Assert.That(actual.ToArray(), Is.EqualTo(Convert.FromHexString(
-            "E0 FC18 5C020100 FB02 4C10000102030405060708090A0B0C0D0E0F".Replace(" ", string.Empty))));
+            "E0 FC18 5C020100 FB02 4C10000102030405060708090A0B0C0D0E0F".RemoveWhiteSpaceFromHexadecimalString())));
     }
 }
