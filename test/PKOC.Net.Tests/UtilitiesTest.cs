@@ -1,6 +1,4 @@
-﻿using PKOC.Net;
-
-namespace PKOC.Net.Tests;
+﻿namespace PKOC.Net.Tests;
 
 [TestFixture]
 [TestOf(typeof(Net.Utilities))]
