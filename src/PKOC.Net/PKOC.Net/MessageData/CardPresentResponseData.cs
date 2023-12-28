@@ -14,12 +14,12 @@ namespace PKOC.Net.MessageData
         /// </summary>
         /// <param name="protocolVersions">An array of bytes representing the protocol versions.</param>
         /// <param name="error">An array of bytes representing the error.</param>
-        /// <param name="transactionIdentifier">An array of bytes representing the transaction identifier.</param>
-        public CardPresentResponseData(byte[] protocolVersions, byte[] error, byte[] transactionIdentifier)
+        /// <param name="transactionSequence">The transaction sequence.</param>
+        public CardPresentResponseData(byte[] protocolVersions, byte[] error, byte transactionSequence)
         {
             ProtocolVersions = protocolVersions;
             Error = error;
-            TransactionIdentifier = transactionIdentifier;
+            TransactionSequence = transactionSequence;
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace PKOC.Net.MessageData
 
             AddToData(data, TLVCode.SupportedProtocol, ProtocolVersions.OrderByDescending(b => b).ToArray(), true);
             AddToData(data, TLVCode.Error, Error, false);
-            AddToData(data, TLVCode.TransactionIdentifier, TransactionIdentifier, true);
+            AddToData(data, TLVCode.TransactionSequence, new byte[] { TransactionSequence }, false);
 
             data[2] = (byte)(data.Count - 3);
 
@@ -68,7 +68,7 @@ namespace PKOC.Net.MessageData
 
             byte[] protocolVersions = Array.Empty<byte>();
             byte[] errorCode = Array.Empty<byte>();
-            byte[] transactionIdentifier = Array.Empty<byte>();
+            byte transactionSequence = 0x00;
         
             int index = 0;
             while (index < cardPresentTLVData.Length - 2)
@@ -84,33 +84,31 @@ namespace PKOC.Net.MessageData
                     case TLVCode.Error:
                         errorCode = tlvData.Data;
                         break;
-                    case TLVCode.TransactionIdentifier:
-                        transactionIdentifier = tlvData.Data;
+                    case TLVCode.TransactionSequence:
+                        transactionSequence = tlvData.Data[0];
                         break;
                 }
             }
         
-            return new CardPresentResponseData(protocolVersions, errorCode, transactionIdentifier);
+            return new CardPresentResponseData(protocolVersions, errorCode, transactionSequence);
         }
-        
+
+        /// <summary>
+        /// Gets the supported protocol versions.
+        /// </summary>
+        /// <returns>An array of bytes representing the supported protocol versions.</returns>
         public byte[] ProtocolVersions { get; }
 
         /// <summary>
-        /// Gets the error message as a byte array.
+        /// Gets the error message
         /// </summary>
-        /// <returns>The error message as a byte array.</returns>
+        /// <returns>An array of bytes representing the error message.</returns>
         public byte[] Error { get; }
 
+
         /// <summary>
-        /// Gets the transaction identifier.
+        /// Gets the transaction sequence number.
         /// </summary>
-        /// <remarks>
-        /// The transaction identifier is a unique identifier associated with the transaction.
-        /// It is represented as a byte array.
-        /// </remarks>
-        /// <returns>
-        /// The transaction identifier as a byte array.
-        /// </returns>
-        public byte[] TransactionIdentifier { get; }
+        public byte TransactionSequence { get; }
     }
 }

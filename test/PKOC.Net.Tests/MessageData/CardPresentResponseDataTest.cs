@@ -12,7 +12,7 @@ public class CardPresentResponseDataTest
         // Arrange
         var messageData =
             Convert.FromHexString(
-                "E0 FC18 FB02 5C020100 4C10000102030405060708090A0B0C0D0E0F".RemoveWhiteSpaceFromHexadecimalString());
+                "E0 FC08 FB02 5C020100 FD03".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = CardPresentResponseData.ParseData(messageData);
@@ -20,8 +20,7 @@ public class CardPresentResponseDataTest
         // Assert
         Assert.That(actual.ProtocolVersions, Is.EqualTo(new byte[] { 0x01, 0x00 }));
         Assert.That(actual.Error, Is.EqualTo(new [] { ErrorCode.TimeoutAccessingCard }));
-        Assert.That(actual.TransactionIdentifier,
-            Is.EqualTo(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray()));
+        Assert.That(actual.TransactionSequence, Is.EqualTo(0x03));
     }
 
     [Test]
@@ -29,9 +28,7 @@ public class CardPresentResponseDataTest
     {
         // Arrange
         var messageData =
-            Convert.FromHexString(
-                "E0 FC1A FB019000 5C020100 4C10000102030405060708090A0B0C0D0E0F"
-                    .RemoveWhiteSpaceFromHexadecimalString());
+            Convert.FromHexString("E0 FC0A FB019000 5C020100 FD03".RemoveWhiteSpaceFromHexadecimalString());
 
         // Act
         var actual = CardPresentResponseData.ParseData(messageData);
@@ -39,8 +36,7 @@ public class CardPresentResponseDataTest
         // Assert
         Assert.That(actual.ProtocolVersions, Is.EqualTo(new byte[] { 0x01, 0x00 }));
         Assert.That(actual.Error, Is.EqualTo(new byte[] { ErrorCode.ISO7816Status, 0x90, 0x00 }));
-        Assert.That(actual.TransactionIdentifier,
-            Is.EqualTo(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray()));
+        Assert.That(actual.TransactionSequence, Is.EqualTo(0x03));
     }
 
     [Test]
@@ -67,14 +63,12 @@ public class CardPresentResponseDataTest
     public void BuildDataTest()
     {
         // Arrange
-        var cardPresentData = new CardPresentResponseData(new byte[] { 0x00, 0x01 },
-            new [] { ErrorCode.TimeoutAccessingCard },
-            Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray());
+        var cardPresentData = new CardPresentResponseData([0x00, 0x01], [ErrorCode.TimeoutAccessingCard], 0x03);
 
         // Act
         var actual = cardPresentData.BuildData();
 
         Assert.That(actual.ToArray(), Is.EqualTo(Convert.FromHexString(
-            "E0 FC18 5C020100 FB02 4C10000102030405060708090A0B0C0D0E0F".RemoveWhiteSpaceFromHexadecimalString())));
+            "E0 FC08 5C020100 FB02 FD03".RemoveWhiteSpaceFromHexadecimalString())));
     }
 }

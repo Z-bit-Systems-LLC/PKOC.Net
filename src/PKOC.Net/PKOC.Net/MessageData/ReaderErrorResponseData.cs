@@ -11,7 +11,7 @@ namespace PKOC.Net.MessageData
         /// <summary>
         /// Represents the error response data from a reader.
         /// </summary>
-        /// <param name="error">The error data.</param>
+        /// <param name="error">An array of bytes representing the error message.</param>
         public ReaderErrorResponseData(byte[] error)
         {
             Error = error;
@@ -47,9 +47,9 @@ namespace PKOC.Net.MessageData
         }
     
         /// <summary>
-        /// Gets the error message as a byte array.
+        /// Gets the error message.
         /// </summary>
-        /// <returns>The error message as a byte array.</returns>
+        /// <returns>An array of bytes representing the error message.</returns>
         public byte[] Error { get; }
     }
 }

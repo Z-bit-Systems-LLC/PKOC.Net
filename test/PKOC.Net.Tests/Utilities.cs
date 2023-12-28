@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace PKOC.Net.Tests;
+﻿namespace PKOC.Net.Tests;
 
 public static class Utilities
 {
