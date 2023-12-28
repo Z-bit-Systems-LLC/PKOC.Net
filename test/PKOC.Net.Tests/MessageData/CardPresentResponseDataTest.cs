@@ -63,7 +63,7 @@ public class CardPresentResponseDataTest
     public void BuildDataTest()
     {
         // Arrange
-        var cardPresentData = new CardPresentResponseData([0x00, 0x01], [ErrorCode.TimeoutAccessingCard], 0x03);
+        var cardPresentData = new CardPresentResponseData([0x01, 0x00], [ErrorCode.TimeoutAccessingCard], 0x03);
 
         // Act
         var actual = cardPresentData.BuildData();

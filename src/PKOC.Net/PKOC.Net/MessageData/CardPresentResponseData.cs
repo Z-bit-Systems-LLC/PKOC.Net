@@ -33,9 +33,9 @@ namespace PKOC.Net.MessageData
                     0x00
                 };
 
-            AddToData(data, TLVCode.SupportedProtocol, ProtocolVersions.OrderByDescending(b => b).ToArray(), true);
+            AddToData(data, TLVCode.ProtocolVersion, ProtocolVersions, true);
             AddToData(data, TLVCode.Error, Error, false);
-            AddToData(data, TLVCode.TransactionSequence, new byte[] { TransactionSequence }, false);
+            AddToData(data, TLVCode.TransactionSequence, new[] { TransactionSequence }, false);
 
             data[2] = (byte)(data.Count - 3);
 
@@ -71,14 +71,14 @@ namespace PKOC.Net.MessageData
             byte transactionSequence = 0x00;
         
             int index = 0;
-            while (index < cardPresentTLVData.Length - 2)
+            while (index < cardPresentTLVData.Data.Length)
             {
                 var tlvData = GetTLVData(cardPresentTLVData.Data.Skip(index).ToArray());
                 index += tlvData.Length;
             
                 switch (tlvData.TLVCode)
                 {
-                    case TLVCode.SupportedProtocol:
+                    case TLVCode.ProtocolVersion:
                         protocolVersions = tlvData.Data;
                         break;
                     case TLVCode.Error:

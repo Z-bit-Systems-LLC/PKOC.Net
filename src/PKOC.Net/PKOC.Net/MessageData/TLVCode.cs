@@ -3,9 +3,10 @@
     public enum TLVCode
     {
         TransactionIdentifier = 0x4C,
-        SupportedProtocol = 0x5C,
+        ReaderIdentifier = 0x4D,
+        ProtocolVersion = 0x5C,
         Error = 0xFB,
         CardPresentPayload = 0xFC,
-        TransactionSequence = 0xFD,
+        TransactionSequence = 0xFD
     }
 }

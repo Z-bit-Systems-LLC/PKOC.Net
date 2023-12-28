@@ -55,7 +55,7 @@ namespace PKOC.Net.MessageData
             byte transactionSequence = 0x00;
 
             int index = 1;
-            while (index < data.Length - 1)
+            while (index < data.Length)
             {
                 var tlvData = GetTLVData(data.Slice(index));
                 index += tlvData.Length;
@@ -71,7 +71,7 @@ namespace PKOC.Net.MessageData
                 }
             }
 
-            if (transactionIdentifier.Length < 16 || transactionIdentifier.Length > 66)
+            if (transactionIdentifier.Length < 16 || transactionIdentifier.Length > 65)
             {
                 throw new Exception("An invalid transaction identifier TLV was found in the data");
             }
