@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OSDP.Net;
+using OSDP.Net.Model.CommandData;
 using PKOC.Net.MessageData;
 
 namespace PKOC.Net
@@ -37,10 +39,29 @@ namespace PKOC.Net
                     {
                         InvokeCardPresented();
                     }
+                    else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.AuthorizationResponse)
+                    {
+                        
+                    }
+                    else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.ReaderErrorResponse)
+                    {
+                        
+                    }
                 };
             }
             
             return success;
+        }
+
+        public async Task AuthenticationRequest(DeviceIdentification settings)
+        {
+            var result = await _panel.ManufacturerSpecificCommand(settings.ConnectionId, settings.Address,
+                new ManufacturerSpecific(PSIAVendorCode, new AuthenticationRequestData(new byte[] { 0x01, 0x00 },
+                    Enumerable.Range(0x00, 32).Select(i => (byte)i).ToArray(),
+                    Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray(), 0x00).BuildData().ToArray()), 128,
+                TimeSpan.FromSeconds(10), CancellationToken.None);
+            
+            
         }
 
         private static bool IsPSIAVendorCode(IEnumerable<byte> manufacturerSpecificVendorCode)

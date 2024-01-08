@@ -40,12 +40,12 @@ public class AuthenticationRequestDataTest
     public void BuildData()
     {
         // Arrange
-        var nextTransactionRequestData =
+        var authenticationRequestData =
             new AuthenticationRequestData([0x01, 0x00], Enumerable.Range(0x00, 32).Select(i => (byte)i).ToArray(),
                 Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray(), 0x03);
 
         // Act
-        var actual = nextTransactionRequestData.BuildData();
+        var actual = authenticationRequestData.BuildData();
 
         Assert.That(actual.ToArray(), Is.EqualTo(Convert.FromHexString(
             "E1 0001 5C020100 4D20000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F 4C10000102030405060708090A0B0C0D0E0F FD03".RemoveWhiteSpaceFromHexadecimalString())));
