@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PKOC.Net.MessageData
 {
@@ -29,7 +30,7 @@ namespace PKOC.Net.MessageData
             var data =
                 new List<byte>
                 {
-                    (byte)PKOCMessageIdentifier.AuthorizationResponse,
+                    (byte)PKOCMessageIdentifier.AuthenticationResponse,
                 };
 
             AddToData(data, TLVCode.PublicKey, PublicKey, true);
@@ -51,7 +52,7 @@ namespace PKOC.Net.MessageData
                 throw new Exception("Data length is less than 1");
             }
 
-            if (data[0] != (byte)PKOCMessageIdentifier.AuthorizationResponse)
+            if (data[0] != (byte)PKOCMessageIdentifier.AuthenticationResponse)
             {
                 throw new Exception("Not a Authentication request data type");
             }
@@ -146,5 +147,10 @@ namespace PKOC.Net.MessageData
         /// </summary>
         /// <returns>An array of bytes representing the error message.</returns>
         public byte[] Error { get; }
+
+        public bool IsValidSignature()
+        {
+            return Utilities.ValidateSignature(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray(), PublicKey, DigitalSignature);
+        }
     }
 }

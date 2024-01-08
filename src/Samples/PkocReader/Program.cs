@@ -1,4 +1,5 @@
-﻿using OSDP.Net;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OSDP.Net;
 using OSDP.Net.Connections;
 using PKOC.Net;
 
@@ -28,7 +29,15 @@ pkocPanel.CardPresented += (_, eventArgs) =>
 
     Task.Run(async () =>
     {
-        await pkocPanel.AuthenticationRequest(deviceIdentification);
+        var result = await pkocPanel.AuthenticationRequest(deviceIdentification);
+        if (result.IsValidSignature())
+        {
+            Console.WriteLine("Valid credential found");
+        }
+        else
+        {
+            Console.WriteLine("Invalid credential found");
+        }
     });
 
 };

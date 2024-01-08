@@ -24,5 +24,13 @@ namespace PKOC.Net
 #endif
             }
         }
+        
+        internal static bool BuildMultiPartMessageData(ushort wholeMessageSize, ushort offset, ushort lengthOfFragment,
+            ReadOnlySpan<byte> fragment, Span<byte> data)
+        {
+            fragment.CopyTo(data.Slice(offset, lengthOfFragment));
+
+            return wholeMessageSize == offset + lengthOfFragment;
+        }
     }
 }
