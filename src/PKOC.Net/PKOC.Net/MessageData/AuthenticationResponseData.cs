@@ -148,6 +148,10 @@ namespace PKOC.Net.MessageData
         /// <returns>An array of bytes representing the error message.</returns>
         public byte[] Error { get; }
 
+        /// <summary>
+        /// TODO: This is not valid method for validating cards, a random transaction ID needs to be used
+        /// </summary>
+        /// <returns></returns>
         public bool IsValidSignature()
         {
             return Utilities.ValidateSignature(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray(), PublicKey, DigitalSignature);
