@@ -3,6 +3,10 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
         <LangVersion>7.3</LangVersion>
+        <Title>PKOC.Net</Title>
+        <Authors>Jonathan Horvath</Authors>
+        <RepositoryUrl>https://github.com/bytedreamer/PKOC.Net.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>

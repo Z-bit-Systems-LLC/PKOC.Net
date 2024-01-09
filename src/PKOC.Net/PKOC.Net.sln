@@ -10,6 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1A0A9B40
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKOC.Net.Tests", "..\..\test\PKOC.Net.Tests\PKOC.Net.Tests.csproj", "{36A537CE-6123-4F86-99A3-09254898D7DD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{9B5F87B9-2138-4266-ACF1-0A9E2175A8F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{E8677D90-2B6D-4487-8536-B1D2F0324018}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\azure-pipelines.yml = ..\..\azure-pipelines.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +39,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{304AFAF7-B054-4014-BAD9-7AC0165596B2} = {2D548342-246E-407E-A6B3-132D35C54D92}
 		{36A537CE-6123-4F86-99A3-09254898D7DD} = {1A0A9B40-79C9-4955-AA23-8DF622AAD31C}
+		{E8677D90-2B6D-4487-8536-B1D2F0324018} = {9B5F87B9-2138-4266-ACF1-0A9E2175A8F8}
 	EndGlobalSection
 EndGlobal
