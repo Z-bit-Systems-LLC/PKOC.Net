@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using OSDP.Net.Model.ReplyData;
 
 namespace PKOC.Net
 {
@@ -25,12 +26,20 @@ namespace PKOC.Net
             }
         }
         
-        internal static bool BuildMultiPartMessageData(ushort wholeMessageSize, ushort offset, ushort lengthOfFragment,
-            ReadOnlySpan<byte> fragment, Span<byte> data)
+        internal static bool BuildMultiPartMessageData(DataFragmentResponse dataFragment, DeviceSettings deviceSettings)
         {
-            fragment.CopyTo(data.Slice(offset, lengthOfFragment));
+            deviceSettings.ConcatIncomingData(dataFragment);
 
-            return wholeMessageSize == offset + lengthOfFragment;
+            // Are we at the end
+            return dataFragment.WholeMessageLength == dataFragment.Offset + dataFragment.LengthOfFragment;
+        }
+        
+        internal static byte[] GenerateRandomBytes(int length)
+        {
+            var random = new Random();
+            var buffer = new byte[length];
+            random.NextBytes(buffer);
+            return buffer; 
         }
     }
 }

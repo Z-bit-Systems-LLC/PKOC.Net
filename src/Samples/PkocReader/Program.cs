@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using OSDP.Net;
+﻿using OSDP.Net;
 using OSDP.Net.Connections;
 using PKOC.Net;
 
@@ -7,7 +6,7 @@ var panel = new ControlPanel();
 var pkocPanel = new PKOCControlPanel(panel);
 
 var connectionId = panel.StartConnection(new SerialPortOsdpConnection("COM3", 9600));
-DeviceIdentification? deviceIdentification = null;
+DeviceSettings? deviceIdentification = null;
 
 panel.ConnectionStatusChanged += async (_, eventArgs) =>
 {
@@ -15,7 +14,7 @@ panel.ConnectionStatusChanged += async (_, eventArgs) =>
     {
         Console.WriteLine("The OSDP reader is connected and will attempt to initialize for PKOC.");
 
-        deviceIdentification = new DeviceIdentification(eventArgs.ConnectionId, eventArgs.Address);
+        deviceIdentification = new DeviceSettings(eventArgs.ConnectionId, eventArgs.Address);
         bool successfulInitialization = await pkocPanel.InitializePKOC(deviceIdentification);
         Console.WriteLine(successfulInitialization
             ? "The OSDP reader has been successfully initialized for PKOC."
@@ -23,23 +22,15 @@ panel.ConnectionStatusChanged += async (_, eventArgs) =>
     }
 };
 
-pkocPanel.CardPresented += (_, eventArgs) =>
+pkocPanel.CardPresented += (_, _) =>
 {
     Console.WriteLine("A PKOC card has been presented to the reader.");
 
     Task.Run(async () =>
     {
         var result = await pkocPanel.AuthenticationRequest(deviceIdentification);
-        if (result.IsValidSignature())
-        {
-            Console.WriteLine("Valid credential found");
-        }
-        else
-        {
-            Console.WriteLine("Invalid credential found");
-        }
+        Console.WriteLine(result.IsValidSignature() ? "Valid credential found" : "Invalid credential found");
     });
-
 };
 
 panel.AddDevice(connectionId, 0, true, false);
