@@ -75,15 +75,22 @@ namespace PKOC.Net
 
 
             await _lock.WaitAsync(deviceSettings.CardReadTimeout - (DateTime.UtcNow - startReadTime));
-
+            
             return deviceSettings.AuthenticationResponseData();
         }
 
         public event EventHandler<CardPresentedEventArgs> CardPresented;
 
-        private void InvokeCardPresented()
+        private void InvokeCardPresented(CardPresentResponseData cardPresentResponseData)
         {
-            CardPresented?.Invoke(this, new CardPresentedEventArgs());
+            CardPresented?.Invoke(this, new CardPresentedEventArgs(cardPresentResponseData));
+        }
+        
+        public event EventHandler<ReaderErrorReportedEventArgs> ReaderErrorReported;
+
+        private void InvokeReaderErrorReported(ReaderErrorResponseData readerErrorResponseData)
+        {
+            ReaderErrorReported?.Invoke(this, new ReaderErrorReportedEventArgs(readerErrorResponseData));
         }
 
         private PKOCMessageIdentifier IdentifyMessage(IEnumerable<byte> data)
@@ -116,7 +123,7 @@ namespace PKOC.Net
 
             if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.CardPresentResponse)
             {
-                InvokeCardPresented();
+                InvokeCardPresented(CardPresentResponseData.ParseData(eventArgs.ManufacturerSpecific.Data.ToArray()));
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) ==
                      PKOCMessageIdentifier.AuthenticationResponse)
@@ -127,6 +134,8 @@ namespace PKOC.Net
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.ReaderErrorResponse)
             {
+                InvokeReaderErrorReported(
+                    ReaderErrorResponseData.ParseData(eventArgs.ManufacturerSpecific.Data.ToArray()));
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) ==
                      PKOCMessageIdentifier.TransactionRefreshResponse)

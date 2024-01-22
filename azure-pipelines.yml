@@ -18,7 +18,7 @@ variables:
   minor: 0
   patch: 1
   AssemblyVersion: $(major).$(minor).$(patch)
-  NugetVersion: $(major).$(minor).$(patch)
+  NugetVersion: $(major).$(minor).$(patch)-beta
 
 steps:
 - task: UseDotNet@2
