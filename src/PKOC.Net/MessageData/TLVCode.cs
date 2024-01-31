@@ -9,6 +9,6 @@
         DigitalSignature = 0x9E,
         Error = 0xFB,
         CardPresentPayload = 0xFC,
-        TransactionSequence = 0xFD,
+        TransactionSequence = 0xFD
     }
 }
