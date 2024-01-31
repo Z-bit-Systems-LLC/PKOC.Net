@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\PKOC.Net\PKOC.Net\PKOC.Net.csproj" />
+      <ProjectReference Include="..\..\PKOC.Net\PKOC.Net.csproj" />
     </ItemGroup>
 
 </Project>
