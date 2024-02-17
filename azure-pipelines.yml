@@ -18,7 +18,7 @@ variables:
   minor: 0
   patch: 1
   AssemblyVersion: $(major).$(minor).$(patch)
-  NugetVersion: $(major).$(minor).$(patch)
+  NugetVersion: $(major).$(minor).$(patch)-beta
 
 steps:
 - task: UseDotNet@2
@@ -47,7 +47,7 @@ steps:
 - task: ResharperCli@2
   displayName: 'ReSharper Inspection'
   inputs:
-    solutionOrProjectPath: 'src/PKOC.Net.sln'
+    solutionOrProjectPath: 'PKOC.Net.sln'
     failBuildLevelSelector: 'Warning'
     additionalArguments: '--build'
 

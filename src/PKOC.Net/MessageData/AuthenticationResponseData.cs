@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PKOC.Net.MessageData
 {
@@ -135,7 +134,7 @@ namespace PKOC.Net.MessageData
         /// <returns>
         /// The transaction identifier as a byte array.
         /// </returns>
-        public byte[] TransactionIdentifier { get; }
+        public byte[] TransactionIdentifier { get; private set; }
 
         /// <summary>
         /// Gets the transaction sequence number.
@@ -154,7 +153,12 @@ namespace PKOC.Net.MessageData
         /// <returns></returns>
         public bool IsValidSignature()
         {
-            return Utilities.ValidateSignature(Enumerable.Range(0x00, 16).Select(i => (byte)i).ToArray(), PublicKey, DigitalSignature);
+            return Utilities.ValidateSignature(TransactionIdentifier, PublicKey, DigitalSignature);
+        }
+
+        internal void UpdateTransactionId(byte[] transactionIdentifier)
+        {
+            TransactionIdentifier = transactionIdentifier;
         }
     }
 }
