@@ -3,7 +3,7 @@ using OSDP.Net.Connections;
 using PKOC.Net;
 
 var panel = new ControlPanel();
-using var pkocPanel = new PKOCControlPanel(panel);
+var pkocPanel = new PKOCControlPanel(panel);
 
 var connectionId = panel.StartConnection(new SerialPortOsdpConnection("COM3", 9600));
 DeviceSettings? deviceIdentification = null;
