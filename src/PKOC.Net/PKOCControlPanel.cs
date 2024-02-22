@@ -81,16 +81,19 @@ namespace PKOC.Net
 
         public event EventHandler<CardPresentedEventArgs> CardPresented;
 
-        private void InvokeCardPresented(CardPresentResponseData cardPresentResponseData)
+        private void InvokeCardPresented(Guid connectionId, byte address,
+            CardPresentResponseData cardPresentResponseData)
         {
-            CardPresented?.Invoke(this, new CardPresentedEventArgs(cardPresentResponseData));
+            CardPresented?.Invoke(this, new CardPresentedEventArgs(connectionId, address, cardPresentResponseData));
         }
-        
+
         public event EventHandler<ReaderErrorReportedEventArgs> ReaderErrorReported;
 
-        private void InvokeReaderErrorReported(ReaderErrorResponseData readerErrorResponseData)
+        private void InvokeReaderErrorReported(Guid connectionId, byte address,
+            ReaderErrorResponseData readerErrorResponseData)
         {
-            ReaderErrorReported?.Invoke(this, new ReaderErrorReportedEventArgs(readerErrorResponseData));
+            ReaderErrorReported?.Invoke(this,
+                new ReaderErrorReportedEventArgs(connectionId, address, readerErrorResponseData));
         }
 
         private PKOCMessageIdentifier IdentifyMessage(IEnumerable<byte> data)
@@ -123,7 +126,7 @@ namespace PKOC.Net
 
             if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.CardPresentResponse)
             {
-                InvokeCardPresented(CardPresentResponseData.ParseData(eventArgs.ManufacturerSpecific.Data.ToArray()));
+                InvokeCardPresented(eventArgs.ConnectionId, eventArgs.Address, CardPresentResponseData.ParseData(eventArgs.ManufacturerSpecific.Data.ToArray()));
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) ==
                      PKOCMessageIdentifier.AuthenticationResponse)
@@ -134,7 +137,7 @@ namespace PKOC.Net
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.ReaderErrorResponse)
             {
-                InvokeReaderErrorReported(
+                InvokeReaderErrorReported(eventArgs.ConnectionId, eventArgs.Address,
                     ReaderErrorResponseData.ParseData(eventArgs.ManufacturerSpecific.Data.ToArray()));
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) ==
