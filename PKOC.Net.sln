@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{E8677D90-2B6D-4487-8536-B1D2F0324018}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
+		ci\Doxyfile = ci\Doxyfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PkocReader", "src\Samples\PkocReader\PkocReader.csproj", "{8762B813-47E5-4D51-A350-6526E951FAB3}"
