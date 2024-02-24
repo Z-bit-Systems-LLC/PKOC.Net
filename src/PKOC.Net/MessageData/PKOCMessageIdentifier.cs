@@ -1,4 +1,6 @@
-﻿namespace PKOC.Net.MessageData
+﻿// ReSharper disable ClassNeverInstantiated.Global
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+namespace PKOC.Net.MessageData
 {
     public enum PKOCMessageIdentifier
     {

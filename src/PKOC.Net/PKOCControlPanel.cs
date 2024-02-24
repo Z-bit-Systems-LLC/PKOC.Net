@@ -91,6 +91,9 @@ namespace PKOC.Net
             return pkocDevice.AuthenticationResponseData();
         }
 
+        /// <summary>
+        /// Event that is triggered when a card is presented to the reader.
+        /// </summary>
         public event EventHandler<CardPresentedEventArgs> CardPresented;
 
         private void InvokeCardPresented(Guid connectionId, byte address,
@@ -99,6 +102,9 @@ namespace PKOC.Net
             CardPresented?.Invoke(this, new CardPresentedEventArgs(connectionId, address, cardPresentResponseData));
         }
 
+        /// <summary>
+        /// Represents the event argument for the ReaderErrorReported event.
+        /// </summary>
         public event EventHandler<ReaderErrorReportedEventArgs> ReaderErrorReported;
 
         private void InvokeReaderErrorReported(Guid connectionId, byte address,
@@ -107,7 +113,7 @@ namespace PKOC.Net
             ReaderErrorReported?.Invoke(this,
                 new ReaderErrorReportedEventArgs(connectionId, address, readerErrorResponseData));
         }
-
+        
         private PKOCMessageIdentifier IdentifyMessage(IEnumerable<byte> data)
         {
             return (PKOCMessageIdentifier)data.First();
@@ -163,6 +169,7 @@ namespace PKOC.Net
             return manufacturerSpecificVendorCode.SequenceEqual(PSIAVendorCode);
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             _panel.ManufacturerSpecificReplyReceived -= OnPanelOnManufacturerSpecificReplyReceived;
