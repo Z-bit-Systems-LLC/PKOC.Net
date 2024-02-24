@@ -7,6 +7,8 @@ trigger:
 - main
 - develop
 
+pr: none
+
 pool:
   vmImage: 'windows-latest'
 
