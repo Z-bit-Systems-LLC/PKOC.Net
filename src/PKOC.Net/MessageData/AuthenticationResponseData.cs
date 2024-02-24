@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace PKOC.Net.MessageData
 {
+    /// <summary>
+    /// Represents the data of an authentication response.
+    /// </summary>
     public class AuthenticationResponseData : MessageDataBase
     {
         /// <summary>
@@ -44,6 +47,12 @@ namespace PKOC.Net.MessageData
             return data.ToArray();
         }
 
+        /// <summary>
+        /// Parses the provided byte data and returns an instance of AuthenticationResponseData.
+        /// </summary>
+        /// <param name="data">The byte data to parse.</param>
+        /// <returns>An instance of AuthenticationResponseData parsed from the provided byte data.</returns>
+        /// <exception cref="Exception">Thrown when the data length is less than 1 or when the data type is not Authentication response.</exception>
         public static AuthenticationResponseData ParseData(ReadOnlySpan<byte> data)
         {
             if (data.Length < 1)
