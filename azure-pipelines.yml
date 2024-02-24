@@ -46,18 +46,18 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-#- task: ResharperCli@2
-#  displayName: 'ReSharper Inspection'
-#  inputs:
-#    solutionOrProjectPath: 'PKOC.Net.sln'
-#    failBuildLevelSelector: 'Warning'
-#    additionalArguments: '--build'
-
-- task: docwithdoxygen@0
-  displayName: 'Doxygen API html documentation creation'
+- task: ResharperCli@2
+  displayName: 'ReSharper Inspection'
   inputs:
-    UseCustomDoxyFile: true
-    CustomDoxyFilePath: ci/Doxyfile
+    solutionOrProjectPath: 'PKOC.Net.sln'
+    failBuildLevelSelector: 'Warning'
+    additionalArguments: '--build'
+
+#- task: docwithdoxygen@0
+#  displayName: 'Doxygen API html documentation creation'
+#  inputs:
+#    UseCustomDoxyFile: true
+#    CustomDoxyFilePath: ci/Doxyfile
 
 - task: DotNetCoreCLI@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
