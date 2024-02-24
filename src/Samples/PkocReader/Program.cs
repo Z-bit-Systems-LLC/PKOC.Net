@@ -1,11 +1,20 @@
-﻿using OSDP.Net;
+﻿using Microsoft.Extensions.Configuration;
+using OSDP.Net;
 using OSDP.Net.Connections;
 using PKOC.Net;
+
+var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true);
+var config = builder.Build();
+var osdpSection = config.GetSection("OSDP");
+
+var portName = osdpSection["PortName"];
+var baudRate = int.Parse(osdpSection["BaudRate"] ?? "9600");
+var deviceAddress = byte.Parse(osdpSection["DeviceAddress"] ?? "0");
 
 var panel = new ControlPanel();
 var pkocPanel = new PKOCControlPanel(panel);
 
-var connectionId = panel.StartConnection(new SerialPortOsdpConnection("COM3", 9600));
+var connectionId = panel.StartConnection(new SerialPortOsdpConnection(portName, baudRate));
 DevicePKOCSettings? deviceIdentification = null;
 
 panel.ConnectionStatusChanged += async (_, eventArgs) =>
@@ -42,6 +51,6 @@ pkocPanel.ReaderErrorReported += (_, _) =>
     Console.WriteLine("An error occured while a PKOC card has been presented to the reader.");
 };
 
-panel.AddDevice(connectionId, 0, true, false);
+panel.AddDevice(connectionId, deviceAddress, true, false);
 
 Console.ReadLine();
