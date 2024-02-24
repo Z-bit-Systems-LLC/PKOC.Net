@@ -26,9 +26,9 @@ namespace PKOC.Net
             }
         }
         
-        internal static bool BuildMultiPartMessageData(DataFragmentResponse dataFragment, DeviceSettings deviceSettings)
+        internal static bool BuildMultiPartMessageData(DataFragmentResponse dataFragment, DevicePKOCSettings devicePKOCSettings)
         {
-            deviceSettings.ConcatIncomingData(dataFragment);
+            devicePKOCSettings.ConcatIncomingData(dataFragment);
 
             // Are we at the end
             return dataFragment.WholeMessageLength == dataFragment.Offset + dataFragment.LengthOfFragment;

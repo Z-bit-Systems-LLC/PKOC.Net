@@ -6,7 +6,7 @@ var panel = new ControlPanel();
 var pkocPanel = new PKOCControlPanel(panel);
 
 var connectionId = panel.StartConnection(new SerialPortOsdpConnection("COM3", 9600));
-DeviceSettings? deviceIdentification = null;
+DevicePKOCSettings? deviceIdentification = null;
 
 panel.ConnectionStatusChanged += async (_, eventArgs) =>
 {
@@ -14,7 +14,7 @@ panel.ConnectionStatusChanged += async (_, eventArgs) =>
     
     Console.WriteLine("The OSDP reader is connected and will attempt to initialize for PKOC.");
 
-    deviceIdentification = new DeviceSettings(eventArgs.ConnectionId, eventArgs.Address);
+    deviceIdentification = new DevicePKOCSettings(eventArgs.ConnectionId, eventArgs.Address);
     bool successfulInitialization = await pkocPanel.InitializePKOC(deviceIdentification);
     Console.WriteLine(successfulInitialization
         ? "The OSDP reader has been successfully initialized for PKOC."
