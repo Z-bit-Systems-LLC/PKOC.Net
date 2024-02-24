@@ -21,7 +21,7 @@ namespace PKOC.Net
         private readonly SemaphoreSlim _initializeLock = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _lock = new SemaphoreSlim(0, 1);
         private readonly ControlPanel _panel;
-        private readonly ConcurrentBag<DevicePKOCSettings> _deviceSettings = new ConcurrentBag<DevicePKOCSettings>();
+        private readonly ConcurrentBag<PKOCDevice> _deviceSettings = new ConcurrentBag<PKOCDevice>();
         
         /// <summary>
         /// Initialize a new instance of the <see cref="PKOCControlPanel"/> class.
@@ -37,26 +37,26 @@ namespace PKOC.Net
         /// <summary>
         /// Initializes the PKOC device.
         /// </summary>
-        /// <param name="devicePKOCSettings">The device identification settings.</param>
+        /// <param name="pkocDevice">The device identification settings.</param>
         /// <returns>Returns a boolean indicating the success of the initialization.</returns>
-        public async Task<bool> InitializePKOC(DevicePKOCSettings devicePKOCSettings)
+        public async Task<bool> InitializePKOC(PKOCDevice pkocDevice)
         {
             await _initializeLock.WaitAsync();
 
             try
             {
-                if (_deviceSettings.Any(setting => setting.Equals(devicePKOCSettings)))
+                if (_deviceSettings.Any(setting => setting.Equals(pkocDevice)))
                     throw new Exception(
                         "Device is already initialized for PKOC at the requested connection ID and address.");
 
-                bool success = await _panel.ACUReceivedSize(devicePKOCSettings.ConnectionId, devicePKOCSettings.Address,
-                    devicePKOCSettings.MaximumReceiveSize);
-                success &= await _panel.KeepReaderActive(devicePKOCSettings.ConnectionId, devicePKOCSettings.Address,
-                    (ushort)devicePKOCSettings.CardReadTimeout.TotalMilliseconds);
+                bool success = await _panel.ACUReceivedSize(pkocDevice.ConnectionId, pkocDevice.Address,
+                    pkocDevice.MaximumReceiveSize);
+                success &= await _panel.KeepReaderActive(pkocDevice.ConnectionId, pkocDevice.Address,
+                    (ushort)pkocDevice.CardReadTimeout.TotalMilliseconds);
 
                 if (success)
                 {
-                    _deviceSettings.Add(devicePKOCSettings);
+                    _deviceSettings.Add(pkocDevice);
                 }
 
                 return success;
@@ -70,25 +70,25 @@ namespace PKOC.Net
         /// <summary>
         /// Sends an authentication request to a PKOC control panel.
         /// </summary>
-        /// <param name="devicePKOCSettings">The device settings.</param>
+        /// <param name="pkocDevice">The device settings.</param>
         /// <returns>The authentication response.</returns>
-        public async Task<AuthenticationResponseData> AuthenticationRequest(DevicePKOCSettings devicePKOCSettings)
+        public async Task<AuthenticationResponseData> AuthenticationRequest(PKOCDevice pkocDevice)
         {
-            devicePKOCSettings.ClearIncomingData();
+            pkocDevice.ClearIncomingData();
 
             DateTime startReadTime = DateTime.UtcNow;
 
-            await _panel.ManufacturerSpecificCommand(devicePKOCSettings.ConnectionId, devicePKOCSettings.Address,
+            await _panel.ManufacturerSpecificCommand(pkocDevice.ConnectionId, pkocDevice.Address,
                 new ManufacturerSpecific(PSIAVendorCode, new AuthenticationRequestData(
                         new byte[] { 0x01, 0x00 },
-                        devicePKOCSettings.ReaderIdentifier, devicePKOCSettings.CreateRandomTransactionId(), 0x00).BuildData()
-                    .ToArray()), devicePKOCSettings.MaximumFragmentSendSize,
-                devicePKOCSettings.CardReadTimeout, CancellationToken.None);
+                        pkocDevice.ReaderIdentifier, pkocDevice.CreateRandomTransactionId(), 0x00).BuildData()
+                    .ToArray()), pkocDevice.MaximumFragmentSendSize,
+                pkocDevice.CardReadTimeout, CancellationToken.None);
 
 
-            await _lock.WaitAsync(devicePKOCSettings.CardReadTimeout - (DateTime.UtcNow - startReadTime));
+            await _lock.WaitAsync(pkocDevice.CardReadTimeout - (DateTime.UtcNow - startReadTime));
             
-            return devicePKOCSettings.AuthenticationResponseData();
+            return pkocDevice.AuthenticationResponseData();
         }
 
         public event EventHandler<CardPresentedEventArgs> CardPresented;
@@ -113,14 +113,14 @@ namespace PKOC.Net
             return (PKOCMessageIdentifier)data.First();
         }
         
-        private void ProcessAuthenticationResponse(DataFragmentResponse manufacturerSpecificData, DevicePKOCSettings devicePKOCSettings)
+        private void ProcessAuthenticationResponse(DataFragmentResponse manufacturerSpecificData, PKOCDevice pkocDevice)
         {
-            if (devicePKOCSettings.IsDataCleared())
+            if (pkocDevice.IsDataCleared())
             {
-                devicePKOCSettings.AllocateIncomingData(manufacturerSpecificData.WholeMessageLength);
+                pkocDevice.AllocateIncomingData(manufacturerSpecificData.WholeMessageLength);
             }
 
-            if (Utilities.BuildMultiPartMessageData(manufacturerSpecificData, devicePKOCSettings))
+            if (Utilities.BuildMultiPartMessageData(manufacturerSpecificData, pkocDevice))
             {
                 _lock.Release();
             }

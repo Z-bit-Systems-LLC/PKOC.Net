@@ -6,9 +6,9 @@ using PKOC.Net.MessageData;
 namespace PKOC.Net
 {
     /// <summary>
-    /// Represents the PKOC settings for a device. It contains state information needed to process PKOC transactions.
+    /// Represents a device that can process PKOC over OSDP. It contains state information needed to process PKOC transactions.
     /// </summary>
-    public class DevicePKOCSettings : IEquatable<DevicePKOCSettings>
+    public class PKOCDevice : IEquatable<PKOCDevice>
     {
         private const ushort MaximumReceiveSizeDefault = 1024;
         private const ushort MaximumFragmentSendSizeDefault = 128;
@@ -18,25 +18,25 @@ namespace PKOC.Net
         private byte[] _transactionId;
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="DevicePKOCSettings"/> class.
+        /// Initialize a new instance of the <see cref="PKOCDevice"/> class.
         /// </summary>
         /// <param name="connectionId">The unique identifier for the connection.</param>
         /// <param name="address">Represents a address of the device.</param>
-        public DevicePKOCSettings(Guid connectionId, byte address) : this(connectionId, address,
+        public PKOCDevice(Guid connectionId, byte address) : this(connectionId, address,
             MaximumFragmentSendSizeDefault,
             MaximumReceiveSizeDefault, TimeSpan.FromSeconds(CardReadTimeoutDefault))
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="DevicePKOCSettings"/> class.
+        /// Initialize a new instance of the <see cref="PKOCDevice"/> class.
         /// </summary>
         /// <param name="connectionId">The unique identifier for the connection.</param>
         /// <param name="address">Represents a address of the device.</param>
         /// <param name="maximumFragmentSendSize">the maximum size of a fragment to be sent during PKOC transactions.</param>
         /// <param name="maximumReceiveSize">The maximum receive size for PKOC transactions.</param>
         /// <param name="cardReadTimeout">The amount of time to wait for a card read to complete.</param>
-        public DevicePKOCSettings(Guid connectionId, byte address,  ushort maximumFragmentSendSize, 
+        public PKOCDevice(Guid connectionId, byte address,  ushort maximumFragmentSendSize, 
             ushort maximumReceiveSize, TimeSpan cardReadTimeout)
         {
             ConnectionId = connectionId;
@@ -86,7 +86,7 @@ namespace PKOC.Net
         public byte[] ReaderIdentifier { get; }
         
         /// <inheritdoc />
-        public bool Equals(DevicePKOCSettings other)
+        public bool Equals(PKOCDevice other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -99,7 +99,7 @@ namespace PKOC.Net
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((DevicePKOCSettings)obj);
+            return Equals((PKOCDevice)obj);
         }
 
         /// <summary>
