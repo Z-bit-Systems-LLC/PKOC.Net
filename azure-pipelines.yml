@@ -53,6 +53,12 @@ steps:
     failBuildLevelSelector: 'Warning'
     additionalArguments: '--build'
 
+#- task: docwithdoxygen@0
+#  displayName: 'Doxygen API html documentation creation'
+#  inputs:
+#    UseCustomDoxyFile: true
+#    CustomDoxyFilePath: ci/Doxyfile
+
 - task: DotNetCoreCLI@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   displayName: 'dotnet pack'
