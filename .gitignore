@@ -40,3 +40,4 @@ _UpgradeReport_Files/
 *.orig
 
 /docs/html/
+*.pubxml
