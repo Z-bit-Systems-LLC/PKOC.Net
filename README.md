@@ -70,6 +70,10 @@ pkocPanel.ReaderErrorReported += (_, _) =>
 panel.AddDevice(connectionId, deviceAddress, true, false);
 ```
 
+## Documentation
+
+Online API documentation can be found [here](https://z-bitco.com/downloads/PKOC.Net/docs/html).
+
 ## Contributing
 
 Contact me through my consulting company [Z-bit System, LLC](https://z-bitco.com), if interested in further collaboration with the PKOC.Net library.

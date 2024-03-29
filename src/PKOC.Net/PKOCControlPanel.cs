@@ -21,7 +21,7 @@ namespace PKOC.Net
         private readonly SemaphoreSlim _initializeLock = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _lock = new SemaphoreSlim(0, 1);
         private readonly ControlPanel _panel;
-        private readonly ConcurrentBag<PKOCDevice> _deviceSettings = new ConcurrentBag<PKOCDevice>();
+        private readonly ConcurrentBag<PKOCDevice> _deviceSettings = new();
         
         /// <summary>
         /// Initialize a new instance of the <see cref="PKOCControlPanel"/> class.
@@ -66,7 +66,9 @@ namespace PKOC.Net
                 _initializeLock.Release();
             }
         }
-
+        
+        
+        
         /// <summary>
         /// Sends an authentication request to a PKOC control panel.
         /// </summary>
@@ -152,6 +154,11 @@ namespace PKOC.Net
                 ProcessAuthenticationResponse(
                     DataFragmentResponse.ParseData(eventArgs.ManufacturerSpecific.Data.Skip(1).ToArray()),
                     deviceSettings);
+                Task.Run(async () =>
+                {
+                    await _panel.KeepReaderActive(deviceSettings.ConnectionId, deviceSettings.Address,
+                        (ushort)deviceSettings.CardReadTimeout.TotalMilliseconds);
+                });
             }
             else if (IdentifyMessage(eventArgs.ManufacturerSpecific.Data) == PKOCMessageIdentifier.ReaderErrorResponse)
             {

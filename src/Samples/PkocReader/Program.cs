@@ -14,7 +14,7 @@ var deviceAddress = byte.Parse(osdpSection["DeviceAddress"] ?? "0");
 var panel = new ControlPanel();
 var pkocPanel = new PKOCControlPanel(panel);
 
-var connectionId = panel.StartConnection(new SerialPortOsdpConnection(portName, baudRate));
+var connectionId = panel.StartConnection(new SerialPortOsdpConnection(portName, baudRate), TimeSpan.FromMilliseconds(20), true);
 PKOCDevice? pkocDevice = null;
 
 panel.ConnectionStatusChanged += (_, eventArgs) =>
@@ -36,7 +36,7 @@ panel.ConnectionStatusChanged += (_, eventArgs) =>
 pkocPanel.CardPresented += (_, eventArgs) =>
 {
     Console.WriteLine("A PKOC card has been presented to the reader.");
-
+    
     if (eventArgs.CardPresentResponseData.Error is not { Length: 0 })
     {
         Console.WriteLine("An error occured while a PKOC card has been presented to the reader.");
@@ -45,7 +45,9 @@ pkocPanel.CardPresented += (_, eventArgs) =>
     Task.Run(async () =>
     {
         var result = await pkocPanel.AuthenticationRequest(pkocDevice);
+        
         Console.WriteLine(result.IsValidSignature() ? "Valid credential found" : "Invalid credential found");
+        Console.WriteLine($"Raw Public Key - {BitConverter.ToString(result.PublicKey)}");
     });
 };
 
